@@ -10,6 +10,14 @@ const MyRadio = ({label, ...props}) => {
   )
 }
 
+const MyTextField = ({placeholder, ...props}) => {
+  const [field, meta] = useField(props);
+  const errorText = meta.error && meta.touched ? meta.error : '';
+  return (
+    <TextField placeholder={placeholder} {...field} helperText={errorText}/>
+  )
+}
+
 function App() {
   return (
     <div className="App">
@@ -20,7 +28,8 @@ function App() {
       }}>
         {({ values, isSubmitting }) => (
           <Form>
-            <Field name="firstName" placeholder="Firstname" type="input" as={TextField}/>
+            <MyTextField name="firstName" placeholder="Firstname" type="input" />
+            
             <Field name="lastName" placeholder="Lastname" type="input" as={TextField}/>
             <Field name="istall" type="checkbox" as={Checkbox}/>
             <p>Cookies</p>

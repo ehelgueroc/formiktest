@@ -2,6 +2,7 @@ import React from "react";
 import './App.css';
 import { Formik, Field, Form, useField } from "formik";
 import { Button, Checkbox, FormControlLabel, TextField, Radio } from "@material-ui/core";
+import * as yup from 'yup';
 
 const MyRadio = ({label, ...props}) => {
   const [field, meta] = useField(props);
@@ -14,19 +15,33 @@ const MyTextField = ({placeholder, ...props}) => {
   const [field, meta] = useField(props);
   const errorText = meta.error && meta.touched ? meta.error : '';
   return (
-    <TextField placeholder={placeholder} {...field} helperText={errorText}/>
+    <TextField placeholder={placeholder} {...field} helperText={errorText} error={!!errorText}/>
   )
 }
+
+const validationSchema = yup.object({
+  firstName: yup.string().required().max(10)
+});
 
 function App() {
   return (
     <div className="App">
-      <Formik initialValues={{ firstName: '', lastName: '', isTall: false, cookies: []}} onSubmit={(data, {setSubmitting}) => {
+      <Formik initialValues={{ firstName: '', lastName: '', isTall: false, cookies: []}} 
+      // validate={(values) => {
+      //   const errors = {};
+      //   if (values.firstName.includes('bob')){
+      //     errors.firstName = 'no bob';
+      //   }
+
+      //   return errors;
+      // }}
+      validationSchema={validationSchema}
+      onSubmit={(data, {setSubmitting}) => {
         setSubmitting(true);
         console.log(data);
         setSubmitting(false);
       }}>
-        {({ values, isSubmitting }) => (
+        {({ values, isSubmitting, errors }) => (
           <Form>
             <MyTextField name="firstName" placeholder="Firstname" type="input" />
             
@@ -44,6 +59,7 @@ function App() {
               <Button disabled={isSubmitting} type="submit">Submit</Button>
             </div>
             <pre>{JSON.stringify(values, null, 2)}</pre>
+            <pre>{JSON.stringify(errors, null, 2)}</pre>
           </Form>
         )}
       </Formik>

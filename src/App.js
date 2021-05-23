@@ -26,7 +26,16 @@ const validationSchema = yup.object({
 function App() {
   return (
     <div className="App">
-      <Formik initialValues={{ firstName: '', lastName: '', isTall: false, cookies: [], yogurth: "", pets: [{type: "cat", name: "Samuel", id: "" + Math.random()}]}} 
+      <Formik initialValues={
+        { 
+          firstName: '', 
+          lastName: '', 
+          isTall: false, 
+          cookies: [], 
+          yogurth: "", 
+          pets: [{type: "cat", name: "Samuel", id: "" + Math.random()}]
+        }
+      } 
       validationSchema={validationSchema}
       onSubmit={(data, {setSubmitting}) => {
         setSubmitting(true);
@@ -68,6 +77,9 @@ function App() {
                           <MenuItem value="dog">Dog</MenuItem>
                           <MenuItem value="frog">Frog</MenuItem>
                         </Field>
+                        <Button onClick={() => {
+                          arrayHelpers.remove(index);
+                        }}>X</Button>
                       </div>
                     )
                   })}

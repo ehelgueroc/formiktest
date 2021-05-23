@@ -1,7 +1,7 @@
 import React from "react";
 import './App.css';
-import { Formik, Field, Form, useField } from "formik";
-import { Button, Checkbox, FormControlLabel, TextField, Radio } from "@material-ui/core";
+import { Formik, Field, Form, useField, FieldArray } from "formik";
+import { Button, Checkbox, FormControlLabel, TextField, Radio, Select, MenuItem } from "@material-ui/core";
 import * as yup from 'yup';
 
 const MyRadio = ({label, ...props}) => {
@@ -26,15 +26,7 @@ const validationSchema = yup.object({
 function App() {
   return (
     <div className="App">
-      <Formik initialValues={{ firstName: '', lastName: '', isTall: false, cookies: []}} 
-      // validate={(values) => {
-      //   const errors = {};
-      //   if (values.firstName.includes('bob')){
-      //     errors.firstName = 'no bob';
-      //   }
-
-      //   return errors;
-      // }}
+      <Formik initialValues={{ firstName: '', lastName: '', isTall: false, cookies: [], yogurth: "", pets: [{type: "cat", name: "Samuel", id: "" + Math.random()}]}} 
       validationSchema={validationSchema}
       onSubmit={(data, {setSubmitting}) => {
         setSubmitting(true);
@@ -55,6 +47,25 @@ function App() {
             <MyRadio name="yogurth" type="radio" label="Peach" value="peach" />
             <MyRadio name="yogurth" type="radio" label="Apple" value="apple" />
             <MyRadio name="yogurth" type="radio" label="Banana" value="banana" />
+            <FieldArray name="pets">
+              {arrayHelpers => (
+                <div>
+                  {values.pets.map((pet,index) => {
+                    
+                    return (
+                      <div key={pet.id}>
+                        <MyTextField palceholder="pet name" name={`pets.${index}.name`} />
+                        <Field name={`pets.${index}.type`} type="select" as={Select}>
+                          <MenuItem value="cat">Cat</MenuItem>
+                          <MenuItem value="dog">Dog</MenuItem>
+                          <MenuItem value="frog">Frog</MenuItem>
+                        </Field>
+                      </div>
+                    )
+                  })}
+                </div>
+              )}
+            </FieldArray>
             <div>
               <Button disabled={isSubmitting} type="submit">Submit</Button>
             </div>
